@@ -18,7 +18,7 @@ public class HomePage {
 	}
 
 	@FindBy(name = "user-d")
-	WebElement userId;
+	WebElement userId; //
 
 	@FindBy(how = How.NAME, using = "pass-d")
 	WebElement password;
