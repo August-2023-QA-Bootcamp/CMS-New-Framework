@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -11,12 +13,24 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 import com.google.common.io.Files;
 import constants.Attribute;
 import reports.Loggers;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
+
 public class CommonActions {
+	WebDriver driver;
+	CommonWaits waits;
+
+	public CommonActions(WebDriver driver, CommonWaits waits) {
+		this.driver = driver;
+		this.waits = waits;
+	}
 
 	public static void verifyTitle(WebDriver driver, String expectedTitle) {
 		try {
@@ -40,11 +54,25 @@ public class CommonActions {
 		}
 	}
 	
+	public static void inputTextThenClickEnter(WebElement element, String input) {
+		try {
+			element.sendKeys(input, Keys.ENTER);
+			Loggers.logTheTest(input + " <-----> has been put into <-----> " + element + " and then cliked by Enter Key");
+		} catch (NoSuchElementException | NullPointerException e) {
+			e.printStackTrace();
+			Loggers.logTheTest(element + "<----------> has not been found\n" + e.getMessage() );
+			Assert.fail();
+		}
+	}
+	
 	public static void pause(long sec) {
 		try {
 			Thread.sleep(sec * 1000);
-		} catch (InterruptedException e) {
+			Loggers.logTheTest("Sleeping ... zZz " + sec);
+		}catch (InterruptedException e) {
 			e.printStackTrace();
+			Loggers.logTheTest("Sleep interrupted");
+		
 		}
 	}
 	
@@ -57,6 +85,18 @@ public class CommonActions {
 			Loggers.logTheTest(element + "<----------> has not been found\n" + e.getMessage() ); // getMessage() Returns the detail message string of this throwable.
 			Assert.fail();
 		}
+	}
+	
+	public static boolean buttonEnabled(WebElement element) {
+		try {
+			element.isEnabled();
+			Loggers.logTheTest(element + "<---------> is Enable");
+		} catch (NoSuchElementException | NullPointerException e) {
+			e.printStackTrace();
+			Loggers.logTheTest(element + "<----------> is Disable\n" + e.getMessage() ); // getMessage() Returns the detail message string of this throwable.
+			Assert.fail();
+		}
+		return true;
 	}
 	
 	public static void clearTextFromTheField(WebElement element) {
@@ -85,7 +125,7 @@ public class CommonActions {
 	public static void verifyAttribute(WebElement element, String expected, Attribute attribute) {
 		String actual = getAttributeValue(element, attribute);
 		// element.getAttribute(attribute.toString());
-		Loggers.logTheTest(element + " ---> Actula text : " + actual + ". Expected text : " + expected);
+		Loggers.logTheTest(element + " ---> Actual text : " + actual + ". Expected text : " + expected);
 		Assert.assertEquals(actual, expected);
 	}
 	
@@ -112,6 +152,70 @@ public class CommonActions {
 			Loggers.logTheTest(hover_element + " || " + element_after_hover + " ---> Not Found \n" + e.getMessage()); // or represented by ||
 			Assert.fail();
 		}
+	}
+	
+	public static String currentUrl(WebDriver driver) {
+		Loggers.logTheTest("Current URL is : " + driver.getCurrentUrl());
+		return driver.getCurrentUrl();
+	}
+	
+	public static String validationOfHeader(WebElement element, String expectedHeader) {
+		Assert.assertEquals(element.getText(), expectedHeader);
+		Loggers.logTheTest(element + " ---> Actual Header : " + element.getText() + ". Expected Header : " + expectedHeader);
+		return null;
+	}
+	
+	public static String validationOfSubHeader(WebElement element, String expectedSubHeader) {
+		Assert.assertEquals(element.getText(), expectedSubHeader);
+		Loggers.logTheTest(element + " ---> Actual Sub Header : " + element.getText() + ". Expected SubHeader : " + expectedSubHeader);
+		return null;
+	}
+		
+	public boolean isPresent(By locator) {
+		List<WebElement> elements = driver.findElements(locator);
+		if(elements.size() != 0) {
+			Loggers.logTheTest(elements + " --- > This element is present and has match of : " + elements.size());
+			return true;
+		}else {
+			Loggers.logTheTest(elements + " --- > This element is NOT present and no match found : " + elements.size());
+			return false;
+		}
+	}
+	
+	public static void selectDropdown(WebElement element, String value) {
+		try {
+			Select select = new Select(element);
+			select.selectByVisibleText(value);
+			Loggers.logTheTest(value + " has been selected from the dropdown of ---> " + element);
+		} catch (NullPointerException | NoSuchElementException e) {
+			e.printStackTrace();
+			Loggers.logTheTest(element + " : This element Not Found");
+			Assert.fail();
+		}
+	}
+	
+	public static void scrollIntoViewToTheElement(WebDriver driver, String script, WebElement element) {
+		try {
+			((JavascriptExecutor)driver).executeScript(script, element);
+			Loggers.logTheTest("Javascript Executor executing to view ..." + script + " on the element of ---> " + element);
+		} catch (NoSuchElementException | NullPointerException e) {
+			e.printStackTrace();
+			Loggers.logTheTest(element + "<----------> has not been found\n" + e.getMessage());
+			Assert.fail();
+		}
+		
+	}
+	
+	public void jsExecutor(WebDriver driver, String script, WebElement element) {
+		// JavascriptExecutor js = (JavascriptExecutor)driver; // instead of writing this 'js', we can write below one
+		((JavascriptExecutor)driver).executeScript(script, element);
+		Loggers.logTheTest("Javascript Executor executing ..." + script + " on element ---> " + element);
+	}
+	
+	
+	public void failText() {
+		Loggers.logTheTest(getClass().getMethods()[0].getName() + " ---> has failed");
+		Assert.fail();
 	}
 	
 	// very very important interview question

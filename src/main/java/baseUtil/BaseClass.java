@@ -22,12 +22,13 @@ import com.beust.jcommander.Parameter;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import pages.ForgotUserId;
 import pages.HomePage;
+import pages.NewUserRegistration;
 import utils.Configuration;
 import static utils.IConstant.*;
 
 public class BaseClass {
 	public WebDriver driver;
-	public HomePage homePage;
+	public HomePage homePage;	
 	Configuration configuration;
 	public Dimension dimension;
 	public Actions actions;
@@ -36,6 +37,7 @@ public class BaseClass {
 	public Select select;
 	public WebDriverWait wait;
 	String browserName;
+	public NewUserRegistration newUserRegistration;
 	
 	@BeforeMethod
 	public void setUP() {
@@ -87,6 +89,7 @@ public class BaseClass {
 	public void initClass() {
 		homePage = new HomePage(driver);
 		forgotUserId = new ForgotUserId(driver);
+		newUserRegistration = new NewUserRegistration(driver); 
 	}
 	
 	@AfterMethod
