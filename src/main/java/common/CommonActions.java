@@ -57,7 +57,18 @@ public class CommonActions {
 	public static void inputTextThenClickEnter(WebElement element, String input) {
 		try {
 			element.sendKeys(input, Keys.ENTER);
-			Loggers.logTheTest(input + " <-----> has been put into <-----> " + element + " and then cliked by Enter Key");
+			Loggers.logTheTest(input + " <-----> has been put into <-----> " + element + " and then clicked by Enter Key");
+		} catch (NoSuchElementException | NullPointerException e) {
+			e.printStackTrace();
+			Loggers.logTheTest(element + "<----------> has not been found\n" + e.getMessage() );
+			Assert.fail();
+		}
+	}
+	
+	public static void inputTextThenClickTab(WebElement element, String input) {
+		try {
+			element.sendKeys(input, Keys.TAB);
+			Loggers.logTheTest(input + " <-----> has been put into <-----> " + element + " and then clicked by Tab Key");
 		} catch (NoSuchElementException | NullPointerException e) {
 			e.printStackTrace();
 			Loggers.logTheTest(element + "<----------> has not been found\n" + e.getMessage() );
@@ -122,12 +133,28 @@ public class CommonActions {
 		return element.getAttribute(attribute.toString());
 	}
 	
-	public static void verifyAttribute(WebElement element, String expected, Attribute attribute) {
+	public static void verifyAttribute01(WebElement element, String expected, Attribute attribute) {
 		String actual = getAttributeValue(element, attribute);
 		// element.getAttribute(attribute.toString());
-		Loggers.logTheTest(element + " ---> Actual text : " + actual + ". Expected text : " + expected);
+		Loggers.logTheTest(element + " ---> We can Enter : " + actual + " Character in the field which was similar with the Expected as: " + expected);
 		Assert.assertEquals(actual, expected);
 	}
+	
+	public static void verifyLengthOfTheFieldContent(WebElement element, String expected) {
+		verifyAttribute01(element, expected, Attribute.MAX_LENGTH);
+	}
+	
+	public static void verifyAttribute02(WebElement element, String expectedErrorMsg, Attribute attribute) {
+		String actual = getAttributeValue(element, attribute);
+		// element.getAttribute(attribute.toString());
+		Loggers.logTheTest(element + " ---> Actual Error Message Under the field is : " + actual + ". And Expected was: " + expectedErrorMsg);
+		Assert.assertEquals(actual, expectedErrorMsg);
+	}
+	
+	public static void verifyErrorMsgUnderTheField(WebElement element, String expectedErrorMsg) {
+		verifyAttribute02(element, expectedErrorMsg, Attribute.INNER_TEXT); //"innerHTML"
+	}
+	
 	
 	public static void hoverOverAction(WebDriver driver, WebElement element) {
 		try {
@@ -242,6 +269,8 @@ public class CommonActions {
 		}
 		return targetFile.getAbsolutePath();
 	}
+	
+	
 
 	
 
