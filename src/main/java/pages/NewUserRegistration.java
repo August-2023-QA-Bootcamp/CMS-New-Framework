@@ -4,6 +4,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+
+import constants.Attribute;
+
 import static common.CommonActions.*;
 
 public class NewUserRegistration {
@@ -38,6 +41,12 @@ public class NewUserRegistration {
 	
 	@FindBy(id = "cms-newuser-firstName")
 	WebElement firstName;
+	
+	@FindBy(xpath = "//span[text()='Required field.']")
+	WebElement requiredFieldErrorMsgUnderTheField;
+	
+	@FindBy(xpath = "//span[text()='Must be alphabetic characters.']")
+	WebElement alphabeticCharactersErrorMsgUnderTheField;
 	
 	@FindBy(id = "cms-newuser-middleName")
 	WebElement middleName;
@@ -134,10 +143,52 @@ public class NewUserRegistration {
 		currentUrl(driver);
 		verifyTitle(driver, "CMS Enterprise Portal - New User Registration");
 		validationOfHeader(stepTwoHeader, "Step #2: Register Your Information");
-		validationOfSubHeader(stepTwosubHeader, "Step 2 of 3 - Please enter your personal and contact information.");
-		inputText(firstName, "Mohammad");
-		inputText(middleName, "Tofael Kabir");
-		inputText(lastName, "Sharkar");
+		validationOfSubHeader(stepTwosubHeader, "Step 2 of 3 - Please enter your personal and contact information.");		
+		verifyLengthOfTheFieldContent(firstName, "20");
+		inputTextThenClickTab(firstName, "");
+		pause(3);
+		verifyErrorMsgUnderTheField(requiredFieldErrorMsgUnderTheField, "Required field.");
+		pause(3);
+		inputTextThenClickTab(firstName, "% & \\\" ( )");
+		verifyErrorMsgUnderTheField(alphabeticCharactersErrorMsgUnderTheField, "Must be alphabetic characters.");
+		pause(3);
+		clearTextFromTheField(firstName);
+		pause(3);
+		inputTextThenClickTab(firstName, "6573684765");
+		verifyErrorMsgUnderTheField(alphabeticCharactersErrorMsgUnderTheField, "Must be alphabetic characters.");
+		pause(3);
+		clearTextFromTheField(firstName);
+		pause(3);
+		inputText(firstName, "Moha'mm-ad Md");	
+		pause(3);
+		verifyLengthOfTheFieldContent(middleName, "20");
+		inputTextThenClickTab(middleName, "% & \\\" ( )");
+		verifyErrorMsgUnderTheField(alphabeticCharactersErrorMsgUnderTheField, "Must be alphabetic characters.");
+		pause(3);
+		clearTextFromTheField(middleName);
+		pause(3);
+		inputTextThenClickTab(middleName, "6573684765");
+		verifyErrorMsgUnderTheField(alphabeticCharactersErrorMsgUnderTheField, "Must be alphabetic characters.");
+		pause(3);
+		clearTextFromTheField(middleName);
+		pause(3);		
+		inputText(middleName, "To'fael Ka-bir");
+		pause(3);
+		verifyLengthOfTheFieldContent(lastName, "25");
+		inputTextThenClickTab(lastName, "");
+		verifyErrorMsgUnderTheField(requiredFieldErrorMsgUnderTheField, "Required field.");
+		pause(3);
+		inputTextThenClickTab(lastName, "% & \\\" ( )");
+		verifyErrorMsgUnderTheField(alphabeticCharactersErrorMsgUnderTheField, "Must be alphabetic characters.");
+		pause(3);
+		clearTextFromTheField(lastName);
+		pause(3);
+		inputTextThenClickTab(lastName, "6573684765");
+		verifyErrorMsgUnderTheField(alphabeticCharactersErrorMsgUnderTheField, "Must be alphabetic characters.");
+		pause(3);
+		clearTextFromTheField(lastName);
+		pause(3);
+		inputText(lastName, "S'- harkar");
 		pause(5);
 		selectDropdown(suffix, "SR");
 		selectDropdown(birthMonth, "December");

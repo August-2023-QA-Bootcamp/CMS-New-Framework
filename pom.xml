@@ -5,7 +5,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>CMS Portal Framework</name>
 	<description>This framework is about the portal of the Center for Medicare and Medicaid Services</description>
-	
+
 	<dependencies>
 		<!-- Selenium-Java dependency is used to get access of Java based
 		selenium-->
@@ -30,6 +30,28 @@
 			<version>5.6.1</version>
 		</dependency>
 
+		<!-- slf4j-simple, slf4j-api is used to remove the error message regarding slf4j in the console -->
+		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-simple -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>2.0.7</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>2.0.7</version>
+		</dependency>
+
+	    <!-- Most commonly used for reporting -->
+		<!-- https://mvnrepository.com/artifact/com.aventstack/extentreports -->
+		<dependency>
+			<groupId>com.aventstack</groupId>
+			<artifactId>extentreports</artifactId>
+			<version>5.1.1</version>
+		</dependency>
 	</dependencies>
 
 	<build>
