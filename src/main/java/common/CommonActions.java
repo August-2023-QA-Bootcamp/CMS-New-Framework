@@ -76,6 +76,17 @@ public class CommonActions {
 		}
 	}
 	
+	public static void clickElementThenTab(WebElement element) {
+		try {
+			element.sendKeys(Keys.TAB);
+			Loggers.logTheTest(element + "<---------> has been clicked, then click Tab Key");
+		} catch (NoSuchElementException | NullPointerException e) {
+			e.printStackTrace();
+			Loggers.logTheTest(element + "<----------> has not been found\n" + e.getMessage() );
+			Assert.fail();
+		}
+	}
+	
 	public static void pause(long sec) {
 		try {
 			Thread.sleep(sec * 1000);

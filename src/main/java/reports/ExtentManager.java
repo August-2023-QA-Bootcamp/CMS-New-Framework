@@ -8,6 +8,7 @@ public class ExtentManager {
 
 	static ExtentReports extentReports;
 	
+	// ExtentReports dependency required too
 	// This method is ExtentReports type and method name is initialReports()
 	public static ExtentReports initialReports() {
 		if(extentReports == null) {
