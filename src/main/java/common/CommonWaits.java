@@ -11,16 +11,16 @@ import reports.Loggers;
 
 public class CommonWaits {
 
-	WebDriverWait wait;
+	static WebDriverWait wait;
 	
 	public CommonWaits(WebDriverWait wait) {
-		this.wait = wait;
+		CommonWaits.wait = wait;
 	}
 	
-	public void waitUntilClickable(WebElement element) {
+	public static void waitUntilClickable(WebElement element) {
 		try {
 			wait.until(ExpectedConditions.elementToBeClickable(element));
-			Loggers.logTheTest("Waiting for the element to be clickable ---> " + element);
+			Loggers.logTheTest("The element was clickable and here it clicked ---> " + element);
 		} catch (NullPointerException | NoSuchElementException e) {
 			e.printStackTrace();
 			Loggers.logTheTest(element + "<----------> has not been found\n");

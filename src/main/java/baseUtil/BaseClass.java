@@ -3,7 +3,6 @@ package baseUtil;
 import java.lang.reflect.Method;
 import java.time.Duration;
 
-import org.openqa.selenium.Alert;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -16,6 +15,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Optional;
@@ -24,9 +24,9 @@ import org.testng.annotations.Parameters;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
-import com.beust.jcommander.Parameter;
 
 import common.CommonActions;
+import constants.Profile;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import pages.ForgotUserId;
 import pages.HomePage;
@@ -56,9 +56,19 @@ public class BaseClass {
 		report = ExtentManager.initialReports();
 	}
 	
+	@BeforeClass
+	public void beforeClassSetUp() {
+		configuration = new Configuration(Profile.GENERAL); 
+		// default Constructor of Configuration Class will be initialized
+	}
+	
+	@Parameters("browser")
 	@BeforeMethod
-	public void setUP() {
-		configuration = new Configuration(); // default Constructor of Configuration Class will be initialized
+	public void setUP(@Optional(CHROME) String browserName) {
+		// If any reason our test suit doesn't work, then @Optional(CHROME) will work
+		// it means the chrome browser will be open by the help of default option where
+		// WebdriverManager is instantiating the ChromeDriver
+		this.browserName = browserName;
 		initDriver();
 		driver.manage().window().maximize();
 		driver.manage().deleteAllCookies();
@@ -76,7 +86,7 @@ public class BaseClass {
 	}
 	
 	public void initDriver() {
-	    String browserName =	configuration.getProperties(BROWSER);
+	    // String browserName =	configuration.getProperties(BROWSER);
 	
 		switch (browserName) {
 		
