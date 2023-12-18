@@ -13,7 +13,7 @@ public class Loggers {
 	public static void logTheTest(String msg) {
 		logger.log(Level.INFO, msg); // it helps to print in console
 		Reporter.log(msg + "<br>"); // for testng report as index.html
-		ExtentTestManager.getTest().log(Status.INFO, msg);
+	//	ExtentTestManager.getTest().log(Status.INFO, msg);
 	}
 
 }

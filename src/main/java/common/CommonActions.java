@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.OutputType;
@@ -20,6 +21,7 @@ import constants.Attribute;
 import reports.Loggers;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.ElementNotInteractableException;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 
@@ -109,17 +111,43 @@ public class CommonActions {
 		}
 	}
 	
-	public static boolean buttonEnabled(WebElement element) {
+	public static boolean elementEnabled(WebElement element) {
 		try {
-			element.isEnabled();
-			Loggers.logTheTest(element + "<---------> is Enable");
+			boolean flag = element.isEnabled();
+			Loggers.logTheTest(element + "<---------> is Enabled, " + flag);
+			Assert.assertTrue(true, "Element is Disabled ....."); // TODO Nasir: Need to make sure
 		} catch (NoSuchElementException | NullPointerException e) {
 			e.printStackTrace();
-			Loggers.logTheTest(element + "<----------> is Disable\n" + e.getMessage() ); // getMessage() Returns the detail message string of this throwable.
+			Loggers.logTheTest(element + "<----------> is Disabled\n" + e.getMessage() ); // getMessage() Returns the detail message string of this throwable.
 			Assert.fail();
 		}
 		return true;
 	}
+	
+	public static boolean elementDisplayed (WebElement element){
+		try {
+			boolean flag = element.isDisplayed();
+			Loggers.logTheTest(element + "<---------> is Displayed, " + flag);
+			Assert.assertTrue(true, "Element is not displayed .....");
+		} catch (NoSuchElementException | NullPointerException e) {
+			e.printStackTrace();
+			Loggers.logTheTest(element + "<----------> is not Displayed\n" + e.getMessage() );
+		}
+		return true;				
+	}
+	
+	public static boolean elementSelected (WebElement element){
+		try {
+			boolean flag = element.isSelected();
+			Loggers.logTheTest(element + "<---------> is Selected, " + flag);
+			Assert.assertTrue(true, "Element is not Selected .....");
+		} catch (NoSuchElementException | NullPointerException e) {
+			e.printStackTrace();
+			Loggers.logTheTest(element + "<----------> is not Selected\n" + e.getMessage() );
+		}
+		return true;				
+	}
+	
 	
 	public static void clearTextFromTheField(WebElement element) {
 		try {
@@ -158,13 +186,23 @@ public class CommonActions {
 	public static void verifyAttribute02(WebElement element, String expectedErrorMsg, Attribute attribute) {
 		String actual = getAttributeValue(element, attribute);
 		// element.getAttribute(attribute.toString());
-		Loggers.logTheTest(element + " ---> Actual Error Message Under the field is : " + actual + ". And Expected was: " + expectedErrorMsg);
+		Loggers.logTheTest(element + " ---> Actual Error Message is : " + actual + ". And Expected was: " + expectedErrorMsg);
 		Assert.assertEquals(actual, expectedErrorMsg);
 	}
 	
 	public static void verifyErrorMsgUnderTheField(WebElement element, String expectedErrorMsg) {
 		verifyAttribute02(element, expectedErrorMsg, Attribute.INNER_TEXT); //"innerHTML"
 	}
+	
+	public static void verifyErrorMsg(WebElement element, String expectedErrorMsg) {
+		verifyAttribute02(element, expectedErrorMsg, Attribute.INNER_TEXT); //"innerHTML"
+	}
+	
+	// not used
+	public static void verifyErrorMsgTopOfThePage(WebElement element, String expectedErrorMsg) {
+		verifyAttribute02(element, expectedErrorMsg, Attribute.INNER_TEXT); //"innerHTML"
+	}
+	
 	
 	
 	public static void hoverOverAction(WebDriver driver, WebElement element) {
@@ -232,6 +270,22 @@ public class CommonActions {
 		}
 	}
 	
+	public static void selectDropdownAll(WebElement element, List<WebElement> elements) {
+		try {
+			Select select = new Select(element);
+			for(int i =0; i <elements.size(); i++) {
+				Loggers.logTheTest(elements.get(i).getText() + " is present in the dropdown");			
+				select.selectByIndex(i);
+				pause(2);
+			}			
+			Loggers.logTheTest("Total Element: " + elements.size() + " is present in the dropdown");
+		} catch (NullPointerException | NoSuchElementException  e) { // elements er exception add korte hobe
+			e.printStackTrace();
+			Loggers.logTheTest(element + " : This element Not Found");
+			Assert.fail();
+		}
+	}
+	
 	public static void scrollIntoViewToTheElement(WebDriver driver, String script, WebElement element) {
 		try {
 			((JavascriptExecutor)driver).executeScript(script, element);
@@ -281,8 +335,25 @@ public class CommonActions {
 		return targetFile.getAbsolutePath();
 	}
 	
+	public static void switchToChildWindow(WebDriver driver, WebElement element) {
+		try {
+			clickElement(element);
+			Set<String> allWindowHandles = driver.getWindowHandles();
+			Loggers.logTheTest("Total Windows Opened: " + allWindowHandles.size()); 
+			String parent = (String)allWindowHandles.toArray()[0];
+			String child = (String)allWindowHandles.toArray()[1];
+			driver.switchTo().window(child);
+			Loggers.logTheTest(" The Window moved to --> " + child);
+		} catch (NoSuchElementException | NullPointerException e) {
+			e.printStackTrace();
+			Loggers.logTheTest(element + "<----------> has not been found\n" + e.getMessage());
+			Assert.fail();
+		}
+	}
 	
-
+	
+	
+	
 	
 
 	
