@@ -45,17 +45,17 @@ public class BaseClass {
 	public JavascriptExecutor js;
 	public ForgotUserId forgotUserId;
 	public Select select;
-	public WebDriverWait wait;
+	// public WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(explicitlyWait));
 	String browserName;
 	public NewUserRegistration newUserRegistration;
 	ExtentReports report;
 	ExtentTest extentTest;
-	
+/*	
 	@BeforeSuite
 	public void initialReporting() {
 		report = ExtentManager.initialReports();
 	}
-	
+*/	
 	@BeforeClass
 	public void beforeClassSetUp() {
 		configuration = new Configuration(Profile.GENERAL); 
@@ -64,12 +64,12 @@ public class BaseClass {
 	
 	@Parameters("browser")
 	@BeforeMethod
-	public void setUP(@Optional(CHROME) String browserName) {
-		// If any reason our test suit doesn't work, then @Optional(CHROME) will work
-		// it means the chrome browser will be open by the help of default option where
+	public void setUP(@Optional(EDGE) String browserName) {
+		// If any reason our test suit doesn't have parameter or value, then @Optional(FIREFOX) will work BY LINE 98
+		// If there is empty value or wrong value in testng.xml suite, then browser will not match and get the default one
 		// WebdriverManager is instantiating the ChromeDriver
 		this.browserName = browserName;
-		initDriver();
+		initDriver();		
 		driver.manage().window().maximize();
 		driver.manage().deleteAllCookies();
 		driver.get(configuration.getProperties(URL));
@@ -79,7 +79,6 @@ public class BaseClass {
 		long explicitlyWait = Long.parseLong(configuration.getProperties(EXPLICITLY_WAIT));
 		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(pageLoadWait));
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(implicitlyWait));
-		wait = new WebDriverWait(driver, Duration.ofSeconds(explicitlyWait));
 		initClass();
 		actions = new Actions(driver);
 		js = (JavascriptExecutor) driver; // Memorize it
@@ -118,18 +117,18 @@ public class BaseClass {
 		forgotUserId = new ForgotUserId(driver);
 		newUserRegistration = new NewUserRegistration(driver); 
 	}
-	
+/*	
 	@BeforeMethod
 	public void initialTest(Method method) {
 		extentTest = ExtentTestManager.createTest(report, method.getName());
 		extentTest.assignCategory(method.getDeclaringClass().getName());
 	}
-	
+*/	
 	@AfterMethod
 	public void tearUp() {
 		driver.quit();
 	}
-	
+/*	
 	@AfterMethod
 	public void afterEachTest(Method method, ITestResult result) {
 		for(String group: result.getMethod().getGroups()) {
@@ -150,6 +149,6 @@ public class BaseClass {
 	public void publishReport() {
 		report.flush();
 	}
-
+*/
 
 }
